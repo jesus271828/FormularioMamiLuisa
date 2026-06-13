@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Principal - Centro Educativo Mami Luisa</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .menu-container { background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; max-width: 500px; width: 100%; }
+        h1 { color: #1f4e78; margin: 0 0 10px 0; font-size: 26px; }
+        p { color: #666; font-style: italic; margin-bottom: 30px; font-size: 14px; }
+        .menu-options { display: flex; flex-direction: column; gap: 15px; }
+        .btn-menu { display: block; padding: 15px; color: white; text-decoration: none; font-size: 16px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s, background 0.3s; }
+        .btn-menu:hover { transform: translateY(-2px); }
+        .btn-registrar { background-color: #1f4e78; }
+        .btn-registrar:hover { background-color: #153552; }
+        .btn-buscar { background-color: #4a5568; }
+        .btn-buscar:hover { background-color: #2d3748; }
+        .btn-logout { background-color: #c00000; padding: 10px; font-size: 14px; margin-top: 10px; }
+        .btn-logout:hover { background-color: #8a0000; }
+        .footer-text { margin-top: 25px; font-size: 11px; color: #a0aec0; }
+    </style>
+</head>
+<body>
+
+<div class="menu-container">
+    <h1>Centro Educativo Mami Luisa S.R.L.</h1>
+    <p>"Educando con amor para un mundo mejor"</p>
+    
+    <div class="menu-options">
+        <a href="/registrar" class="btn-menu btn-registrar">📝 Registrar Nuevo Estudiante</a>
+        <a href="/buscar_pantalla" class="btn-menu btn-buscar">🔍 Buscar Estudiante / Exportar Excel</a>
+        <a href="/logout" class="btn-menu btn-logout">🔒 Cerrar Sesión</a>
+    </div>
+    
+    <div class="footer-text">Sistema de Control de Admisiones © 2026</div>
+</div>
+
+</body>
+</html>

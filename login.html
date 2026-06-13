@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Control Admisiones</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-container { background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 400px; width: 100%; text-align: center; }
+        h2 { color: #1f4e78; margin-bottom: 5px; }
+        p { color: #666; font-size: 14px; margin-bottom: 25px; font-style: italic; }
+        .form-group { text-align: left; margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #444; font-size: 14px; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        .btn-login { width: 100%; background-color: #1f4e78; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; }
+        .btn-login:hover { background-color: #153552; }
+        .error-message { background-color: #fed7d7; color: #9b2c2c; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 13px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Centro Educativo Mami Luisa</h2>
+    <p>Control de Admisiones</p>
+
+    {% if error %}
+        <div class="error-message">❌ {{ error }}</div>
+    {% endif %}
+
+    <form action="/login" method="POST">
+        <div class="form-group">
+            <label>Usuario:</label>
+            <input type="text" name="username" placeholder="Escribe tu usuario" required>
+        </div>
+        <div class="form-group">
+            <label>Contraseña:</label>
+            <input type="password" name="password" placeholder="Escribe tu contraseña" required>
+        </div>
+        <button type="submit" class="login-container btn-login">Ingresar al Sistema</button>
+    </form>
+</div>
+
+</body>
+</html>

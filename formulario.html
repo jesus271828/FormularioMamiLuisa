@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema - Centro Educativo Mami Luisa</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
+        .form-container { max-width: 1100px; background: #ffffff; margin: 0 auto; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .header { border-bottom: 3px solid #1f4e78; padding-bottom: 10px; margin-bottom: 20px; }
+        .header h1 { color: #1f4e78; margin: 0; font-size: 22px; }
+        .header p { font-style: italic; color: #666; margin: 5px 0 0 0; font-size: 13px; }
+        
+        .top-bar { background-color: #e2e8f0; padding: 15px; border-radius: 6px; margin-bottom: 25px; border-left: 5px solid #1f4e78; }
+        .search-form { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .search-form input[type="text"] { flex: 1; min-width: 200px; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 14px; }
+        .btn-search { background-color: #1f4e78; color: white; border: none; padding: 8px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        .btn-excel { background-color: #2e7d32; color: white; text-decoration: none; padding: 8px 15px; font-weight: bold; border-radius: 4px; font-size: 14px; }
+        .btn-back { background-color: #718096; color: white; text-decoration: none; padding: 8px 15px; font-weight: bold; border-radius: 4px; font-size: 14px; }
+        
+        /* Ajustamos la tabla para que quepan las nuevas columnas de contacto */
+        .results-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .results-table th, .results-table td { border: 1px solid #cbd5e0; padding: 8px; text-align: left; }
+        .results-table th { background-color: #edf2f7; color: #2d3748; font-weight: bold; }
+        .results-table tr:hover { background-color: #f7fafc; }
+
+        .section-title { background-color: #d9e1f2; color: #1f4e78; padding: 6px 12px; font-weight: bold; font-size: 14px; margin-top: 25px; border-left: 5px solid #1f4e78; text-transform: uppercase; }
+        .form-group { display: inline-block; margin-bottom: 12px; vertical-align: top; padding: 0 8px; box-sizing: border-box; }
+        .w-100 { width: 100%; } .w-75 { width: 75%; } .w-66 { width: 66.66%; } .w-50 { width: 50%; } .w-33 { width: 33.33%; } .w-25 { width: 25%; } .w-17 { width: 16.66%; }
+        label { display: block; font-weight: bold; margin-bottom: 4px; color: #444; font-size: 13px; }
+        input[type="text"], input[type="date"], input[type="email"], input[type="number"] { width: 100%; padding: 7px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 13px; }
+        .btn-submit { display: block; width: 100%; background-color: #1f4e78; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 25px; }
+        .alert-success { background-color: #d4edda; color: #155724; padding: 15px; border-radius: 4px; margin-bottom: 20px; font-weight: bold; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
+        <a href="/" class="btn-back">⬅️ Volver al Menú Principal</a>
+    </div>
+
+    <div class="header">
+        <h1>Centro Educativo Mami Luisa S.R.L.</h1>
+        <p>"Educando con amor para un mundo mejor"</p>
+    </div>
+
+    {% if mensaje %}
+        <div class="alert-success">{{ mensaje }}</div>
+    {% endif %}
+
+    {% if modo == "buscar" %}
+        <div class="top-bar">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <form action="/buscar" method="GET" class="search-form" style="flex: 1;">
+                    <label style="font-weight: bold; font-size: 14px;">🔍 Escriba el nombre a buscar:</label>
+                    <input type="text" name="query" placeholder="Nombre o apellido del alumno..." required>
+                    <button type="submit" class="btn-search">Buscar</button>
+                </form>
+                <div>
+                    <a href="/exportar" class="btn-excel">📊 Descargar Excel Completo</a>
+                </div>
+            </div>
+
+            {% if resultados %}
+                <h4 style="margin: 20px 0 5px 0; color: #1f4e78;">Alumnos Encontrados:</h4>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Grado</th>
+                            <th>Padre y Teléfono</th>
+                            <th>Madre y Teléfono</th>
+                            <th>Tutor y Teléfono</th>
+                            <th>Tel. Emergencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for alumno in resultados %}
+                            <tr>
+                                <td><strong>{{ alumno[4] }} {{ alumno[5] }}</strong><br><small>Edad: {{ alumno[7] }}</small></td>
+                                <td>{{ alumno[3] }}</td>
+                                
+                                <td>
+                                    {% if alumno[24] %}{{ alumno[24] }}{% else %}<span style="color:#aaa;">No asignado</span>{% endif %}<br>
+                                    <small>📞 {{ alumno[31] if alumno[31] else 'N/A' }}</small>
+                                </td>
+                                
+                                <td>
+                                    {% if alumno[34] %}{{ alumno[34] }}{% else %}<span style="color:#aaa;">No asignado</span>{% endif %}<br>
+                                    <small>📞 {{ alumno[41] if alumno[41] else 'N/A' }}</small>
+                                </td>
+                                
+                                <td>
+                                    {% if alumno[44] %}{{ alumno[44] }}{% else %}<span style="color:#aaa;">No asignado</span>{% endif %}<br>
+                                    <small>📞 {{ alumno[51] if alumno[51] else 'N/A' }}</small>
+                                </td>
+                                
+                                <td><strong>{{ alumno[21] }}</strong><br><small>({{ alumno[22] }})</small></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% elif resultados is not none %}
+                <p style="color: #c00000; margin-top: 15px; font-weight: bold;">❌ No se encontraron coincidencias.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if modo == "registrar" %}
+        <form id="form-admision" action="/guardar" method="POST">
+            <div style="background-color: #f7fafc; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #cbd5e0;">
+                <div class="form-group w-33"><label>Año Escolar:</label><input type="text" name="ano_escolar" required></div>
+                <div class="form-group w-33"><label>Fecha de Admisión:</label><input type="date" name="fecha_registro" required></div>
+                <div class="form-group w-33"><label>Grado que aplica:</label><input type="text" name="grado_aplica" required></div>
+            </div>
+
+            <div class="section-title">Datos del Estudiante</div>
+            <div class="form-group w-50"><label>Nombres:</label><input type="text" name="est_nombres" required></div>
+            <div class="form-group w-50"><label>Apellidos:</label><input type="text" name="est_apellidos" required></div>
+            <div class="form-group w-50"><label>Fecha de nacimiento:</label><input type="date" name="est_fecha_nac" required></div>
+            <div class="form-group w-25"><label>Edad:</label><input type="number" name="est_edad" required></div>
+            <div class="form-group w-25"><label>Sexo:</label><input type="text" name="est_sexo" placeholder="M / F" required></div>
+            <div class="form-group w-50"><label>Nacionalidad:</label><input type="text" name="est_nacionalidad" required></div>
+            <div class="form-group w-50"><label>Lugar de nacimiento:</label><input type="text" name="est_lugar_nac" required></div>
+            <div class="form-group w-100"><label>Dirección:</label><input type="text" name="est_direccion" required></div>
+            <div class="form-group w-33"><label>Cantidad de hermanos:</label><input type="number" name="est_cant_hermanos"></div>
+            <div class="form-group w-33"><label>Edades de los hermanos:</label><input type="text" name="est_edades_hermanos"></div>
+            <div class="form-group w-33"><label>Lugar que ocupa:</label><input type="text" name="est_lugar_ocupa"></div>
+            <div class="form-group w-50"><label>Tipo de sangre:</label><input type="text" name="est_tipo_sangre"></div>
+            <div class="form-group w-50"><label>Seguro médico:</label><input type="text" name="est_seguro_medico"></div>
+            <div class="form-group w-100"><label>Alergias o condición médica:</label><input type="text" name="est_alergias"></div>
+            <div class="form-group w-100"><label>Medicamentos que usa:</label><input type="text" name="est_medicamentos"></div>
+            <div class="form-group w-50"><label>Médico o pediatra:</label><input type="text" name="est_medico_pediatra"></div>
+            <div class="form-group w-50"><label>Centro médico:</label><input type="text" name="est_centro_medico"></div>
+            <div class="form-group w-50"><label>Teléfono Emergencia:</label><input type="text" name="est_emergencia_tel" required></div>
+            <div class="form-group w-33"><label>Nombre Adulto Emergencia:</label><input type="text" name="est_emergencia_nombre"></div>
+            <div class="form-group w-17"><label>Parentesco:</label><input type="text" name="est_emergencia_parentesco"></div>
+            
+            <div class="section-title">Datos del Padre</div>
+            <div class="form-group w-100"><label>Nombres y apellidos:</label><input type="text" name="padre_nombre"></div>
+            <div class="form-group w-66"><label>Dirección:</label><input type="text" name="padre_direccion"></div>
+            <div class="form-group w-33"><label>Sector:</label><input type="text" name="padre_sector"></div>
+            <div class="form-group w-66"><label>Profesión / Ocupación:</label><input type="text" name="padre_ocupacion"></div>
+            <div class="form-group w-33"><label>Cédula:</label><input type="text" name="padre_cedula"></div>
+            <div class="form-group w-50"><label>Nivel académico:</label><input type="text" name="padre_nivel_acad"></div>
+            <div class="form-group w-50"><label>Religión:</label><input type="text" name="padre_religion"></div>
+            <div class="form-group w-50"><label>Teléfono personal:</label><input type="text" name="padre_telefono_pers"></div>
+            <div class="form-group w-50"><label>Teléfono trabajo:</label><input type="text" name="padre_telefono_trab"></div>
+            <div class="form-group w-100"><label>Correo electrónico:</label><input type="email" name="padre_correo"></div>
+
+            <div class="section-title">Datos de la Madre</div>
+            <div class="form-group w-100"><label>Nombres y apellidos:</label><input type="text" name="madre_nombre"></div>
+            <div class="form-group w-66"><label>Dirección:</label><input type="text" name="madre_direccion"></div>
+            <div class="form-group w-33"><label>Sector:</label><input type="text" name="madre_sector"></div>
+            <div class="form-group w-66"><label>Profesión / Ocupación:</label><input type="text" name="madre_ocupacion"></div>
+            <div class="form-group w-33"><label>Cédula:</label><input type="text" name="madre_cedula"></div>
+            <div class="form-group w-50"><label>Nivel académico:</label><input type="text" name="madre_nivel_acad"></div>
+            <div class="form-group w-50"><label>Religión:</label><input type="text" name="madre_religion"></div>
+            <div class="form-group w-50"><label>Teléfono personal:</label><input type="text" name="madre_telefono_pers"></div>
+            <div class="form-group w-50"><label>Teléfono trabajo:</label><input type="text" name="madre_telefono_trab"></div>
+            <div class="form-group w-100"><label>Correo electrónico:</label><input type="email" name="madre_correo"></div>
+
+            <div class="section-title">Datos del Tutor</div>
+            <div class="form-group w-100"><label>Nombres y apellidos:</label><input type="text" name="tutor_nombre"></div>
+            <div class="form-group w-66"><label>Dirección:</label><input type="text" name="tutor_direccion"></div>
+            <div class="form-group w-33"><label>Sector:</label><input type="text" name="tutor_sector"></div>
+            <div class="form-group w-66"><label>Profesión / Ocupación:</label><input type="text" name="tutor_ocupacion"></div>
+            <div class="form-group w-33"><label>Cédula:</label><input type="text" name="tutor_cedula"></div>
+            <div class="form-group w-50"><label>Nivel académico:</label><input type="text" name="tutor_nivel_acad"></div>
+            <div class="form-group w-50"><label>Religión:</label><input type="text" name="tutor_religion"></div>
+            <div class="form-group w-50"><label>Teléfono personal:</label><input type="text" name="tutor_telefono_pers"></div>
+            <div class="form-group w-50"><label>Teléfono trabajo:</label><input type="text" name="tutor_telefono_trab"></div>
+            <div class="form-group w-100"><label>Correo electrónico:</label><input type="email" name="tutor_correo"></div>
+
+            <button type="submit" class="btn-submit">Guardar Registro en Base de Datos</button>
+        </form>
+    {% endif %}
+</div>
+
+</body>
+</html>
